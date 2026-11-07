@@ -29,7 +29,7 @@ const client = new Client({
 });
 
 const welcomeChannelId = "1499822302454616075"; 
-const inviteChannelId = "1499931419277791293";   
+const inviteChannelId = "1499931419277791293";    
 const invitesCache = new Map<string, Map<string, number>>();
 
 client.on("ready", async () => {
@@ -446,18 +446,10 @@ client.on("interactionCreate", async (interaction) => {
         if (match) ownerId = match[1];
       }
       await interaction.reply({ content: "⏳ Generando transcript y cerrando ticket..." });
-      await closeTicket(channel, interaction.user.tag, ownerId);
+      return await closeTicket(channel, interaction.user.tag, ownerId);
     }
 
     if (interaction.customId === "claim_ticket_btn") {
-      if (!interaction.memberPermissions?.has(PermissionsBitField.Flags.ManageMessages)) {
-        const staffRole = interaction.guild?.roles.cache.find(r => r.name === "Staff-Team");
-        const hasRole = staffRole && (interaction.member?.roles as any)?.cache?.has(staffRole.id);
-                if (!hasRole) {
-          return await interaction.reply({ content: "❌ Solo lo puede usar el Staff.", ephemeral: true });
- }
-        }
-                      if (interaction.customId === "claim_ticket_btn") {
       if (!interaction.memberPermissions?.has(PermissionsBitField.Flags.ManageMessages)) {
         const staffRole = interaction.guild?.roles.cache.find(r => r.name === "Staff-Team");
         const hasRole = staffRole && (interaction.member?.roles as any)?.cache?.has(staffRole.id);
@@ -510,11 +502,11 @@ client.on("interactionCreate", async (interaction) => {
         );
 
         await botMessage.edit({ embeds: [newEmbed], components: [row] }).catch(() => {});
-   }
-                          return await interaction.reply({ content: `✅ Has reclamado este ticket exitosamente. **Staff a cargo:** <@${interaction.user.id}>`, ephemeral: true });
+      }
+
+      return await interaction.reply({ content: `✅ Has reclamado este ticket exitosamente. **Staff a cargo:** <@${interaction.user.id}>`, ephemeral: true });
     }
   }
- }
 });
 
 const token = process.env.DISCORD_TOKEN;
@@ -532,6 +524,7 @@ app.get("/", (req, res) => {
   res.send("¡El bot está activo!");
 });
 
-app.listen(3000, () => {
-  console.log("Servidor web listo en el puerto 3000");
+// Cambiado a 8080 para que coincida perfectamente con Koyeb
+app.listen(8080, () => {
+  console.log("Servidor web listo en el puerto 8080");
 });
